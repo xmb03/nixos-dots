@@ -1,98 +1,102 @@
 # nixos-dots
 
-NixOS + home-manager + pywal dotfiles.
+NixOS dotfiles with i3wm, pywal theming, LazyVim, and home-manager.
 
-## Структура
+Forked from [i3-dots](https://github.com/xmb03/i3-dots) — ported from Arch Linux to NixOS.
+
+## Features
+
+- **i3wm** — full modular config with pywal-driven colors via Xresources
+- **pywal** — single wallpaper pick colorschemes kitty, rofi, i3, zathura, nvim, zsh
+- **LazyVim** — Neovim distribution with neopywal colorscheme
+- **i3status-rust** — status bar with keyboard layout, volume, backlight, clock, power button
+- **Rofi** — app launcher, clipboard manager (greenclip), window switcher, power menu
+- **Zsh** — autosuggestions + syntax highlighting with dynamic pywal colors
+- **kitty** — terminal with pywal color integration
+- **redshift** — blue light filter
+- **udiskie** — USB auto-mount
+
+## Structure
 
 ```
 flake.nix              ← nixpkgs (unstable) + home-manager
-configuration.nix      ← system: boot, network, xserver, i3, pipewire
-home.nix              ← home-manager: imports, пакеты, .Xresources
+flake.lock
+configuration.nix      ← system: bootloader, network, xserver, i3, pipewire
+home.nix              ← home-manager entrypoint
 modules/
-  wm/i3.nix           ← i3 extraConfig (keybinds, autostart, bar, цвета)
-  wm/i3-settings.nix  ← i3status-rust (keyboard, sound, backlight, clock, poweroff)
-  term/kitty.nix      ← kitty + wal colors
-  shell/zsh.nix       ← zsh + wal integration (colors.sh, sequences)
-  shell/bash.nix      ← bash aliases
-  apps/rofi.nix       ← rofi (drun, clipboard, powermenu) + wal colors
-  apps/zathura.nix    ← zathura + wal colors
-  editor/nvim.nix     ← neovim LazyVim + neopywal
-  gtk/gtk.nix         ← gtk3 bookmarks + fontconfig
-  services/redshift.nix
-  services/greenclip.nix
-  services/udiskie.nix
-  scripts/rofi-wallpaper.nix  ← wal + feh (выбор обоев через rofi)
-  scripts/powermenu.nix       ← power menu (lock/logout/suspend/reboot/shutdown)
-  hardware/monitor.nix
-  hardware/touchpad.nix
-  theme/wal.nix       ← pywal template для zathura
+  wm/
+    i3.nix            ← i3 keybinds, autostart, bar, window colors
+    i3-settings.nix   ← i3status-rust config
+  term/kitty.nix      ← kitty + pywal colors
+  shell/
+    zsh.nix           ← zsh aliases, pywal integration, syntax highlighting
+    bash.nix          ← bash aliases
+  apps/
+    rofi.nix          ← rofi launcher + powermenu theme
+    zathura.nix       ← zathura + pywal colors
+  editor/nvim.nix     ← LazyVim with neopywal (lua configs in ./lua/)
+  gtk/gtk.nix         ← GTK3 bookmarks + fontconfig
+  services/
+    redshift.nix      ← blue light filter
+    greenclip.nix     ← clipboard manager
+    udiskie.nix       ← USB automount
+  scripts/
+    rofi-wallpaper.nix ← pywal wallpaper picker
+    powermenu.nix      ← power menu (lock, logout, suspend, reboot, shutdown)
+  hardware/
+    monitor.nix       ← DP-0 1920×1200 @ 165Hz
+    touchpad.nix      ← libinput natural scrolling
+  theme/wal.nix       ← pywal template for zathura
 ```
 
-## Перенос из i3-dots — отчёт
+## Keybindings
 
-**Источник:** https://github.com/xmb03/i3-dots (Arch Linux, pywal)
-
-**Цель:** NixOS + home-manager
-
-### Перенесено (81%)
-
-| Компонент | Статус |
+| Key | Action |
 |---|---|
-| i3 (keybinds, autostart, bar, resize, workspace) | ✅ |
-| i3 цвета (set_from_resource, pywal) | ✅ |
-| i3status-rust (keyboard, sound, backlight, clock, poweroff) | ✅ |
-| kitty + include wal colors | ✅ |
-| rofi + powermenu (wal theme) | ✅ |
-| zathura + wal template | ✅ |
-| zsh (wal integration, aliases, highlighting) | ✅ |
-| bash aliases | ✅ |
-| .Xresources #include wal | ✅ |
-| touchpad (libinput) | ✅ |
-| fontconfig (JetBrainsMono) | ✅ |
-| GTK bookmarks | ✅ |
-| redshift | ✅ |
-| powermenu script | ✅ |
-| rofi-wallpaper (wal -i + feh) | ✅ |
-| монитор (xrandr DP-0 1920x1200@165) | ✅ |
-| zathura pywal template | ✅ |
-| greenclip | ✅ |
-| udiskie | ✅ |
+| `$mod+d` | Rofi app launcher |
+| `$mod+v` | Rofi clipboard (greenclip) |
+| `$mod+Tab` | Rofi window switcher |
+| `$mod+w` | Firefox |
+| `$mod+a` | Wallpaper picker |
+| `$mod+p` | Power menu |
+| `Print` | Full screenshot (flameshot) |
+| `$mod+Shift+s` | Region screenshot (flameshot) |
+| `$mod+j/k/l/;` | Focus (vim-style, also arrows) |
+| `$mod+Shift+j/k/l/;` | Move window |
+| XF86Audio{Lower,Raise,Mute}Volume | Volume controls |
+| `$mod+r` | Resize mode |
+| `$mod+1-0` | Workspace switch |
 
-### Частично перенесено
+## Quick start
 
-| Компонент | Статус | Что не хватает |
-|---|---|---|
-| rofi-wallpaper | ⚠️ 93% | `wal-telegram --wal` (нет в nixpkgs) |
-| GTK тема | ⚠️ 50% | нет `gtk.css` (кастомная тёмная тема) |
+```bash
+# Clone
+sudo git clone https://github.com/xmb03/nixos-dots /etc/nixos
 
-### Не перенесено
+# Build
+sudo nixos-rebuild switch --flake /etc/nixos#nixos
 
-| Компонент | Что есть в i3-dots |
+# Add wallpapers
+mkdir -p ~/Pictures/Wallpapers
+# drop .jpg files in there
+
+# Pick first wallpaper (activates pywal)
+$mod+a
+```
+
+## Commands
+
+| Command | Action |
 |---|---|
-| ❌ nvim plugins | `example.lua` — 12 конфигов (telescope, lsp, treesitter, mason, lualine, cmp-emoji, gruvbox, trouble, typescript...) |
-| ❌ nvim lazy-lock.json | 35 пинов плагинов |
-| ❌ nvim stylua.toml | форматтер |
-| ❌ nvim .neoconf.json | lua_ls + neodev |
-| ❌ dconf | GSettings дамп |
+| `sudo nixos-rebuild switch --flake /etc/nixos#nixos` | Rebuild system |
+| `sudo nix flake update --flake /etc/nixos` | Update nixpkgs |
+| `sudo nix-collect-garbage -d` | Clean old generations |
 
-### Удалено (stylix → pywal)
+## Requirements
 
-| Было | Стало |
-|---|---|
-| `stylix` input в flake.nix | удалён |
-| `stylix.nixosModules.stylix` | удалён |
-| `modules/theme/stylix.nix` | `modules/theme/wal.nix` |
-| `set_from_resource` gruvbox дефолты | `set_from_resource` pywal дефолты |
-| catppuccin (nvim) | neopywal |
-| `withPython3 = true;` (nvim) | удалён (deprecated) |
+- NixOS 26.05+
+- Hardware: DP-0 monitor, touchpad
 
-### Исправленные ошибки
+## License
 
-| Ошибка | Исправление |
-|---|---|
-| Дубль `services.libinput.enable` | удалён из `configuration.nix` |
-| `[block.click]` (TOML) | → `[[block.click]]` |
-| `monitorConfig = "1920x1200_165.00"` | → `xrandr` в i3 extraConfig |
-| `exec_always ln -sf` в rofi-wallpaper | удалён (избыточен) |
-| `stylix.targets.*` не включены | не актуально (stylix удалён) |
-| flake.lock с orphaned nodes | почищен |
+MIT
