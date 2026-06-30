@@ -30,7 +30,7 @@
       exec_always --no-startup-id xset r rate 200 50
 
       # ====== MONITOR ======
-      exec_always --no-startup-id xrandr --output DP-0 --primary --mode 1920x1200 --rate 165.00
+      exec_always --no-startup-id xrandr --output DP-0 --primary --mode "1920x1200_165.00"
 
       # ====== BORDERS ======
       default_border pixel 1
