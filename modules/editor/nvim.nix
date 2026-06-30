@@ -1,113 +1,109 @@
-{ config, pkgs, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
-
     extraPackages = with pkgs; [
       lua-language-server
       stylua
-      typescript-language-server
+      ripgrep
     ];
 
-    extraLuaConfig = ''
-      require("config.lazy")
-    '';
+    plugins = with pkgs.vimPlugins; [
+      lazy-nvim
+    ];
+
+    extraLuaConfig =
+      let
+        plugins = with pkgs.vimPlugins; [
+          LazyVim
+          bufferline-nvim
+          cmp-buffer
+          cmp-nvim-lsp
+          cmp-path
+          cmp_luasnip
+          conform-nvim
+          dashboard-nvim
+          dressing-nvim
+          flash-nvim
+          friendly-snippets
+          gitsigns-nvim
+          indent-blankline-nvim
+          lualine-nvim
+          neo-tree-nvim
+          neoconf-nvim
+          neodev-nvim
+          noice-nvim
+          nui-nvim
+          nvim-cmp
+          nvim-lint
+          nvim-lspconfig
+          nvim-notify
+          nvim-spectre
+          nvim-treesitter
+          nvim-treesitter-context
+          nvim-treesitter-textobjects
+          nvim-ts-autotag
+          nvim-ts-context-commentstring
+          nvim-web-devicons
+          persistence-nvim
+          plenary-nvim
+          telescope-fzf-native-nvim
+          telescope-nvim
+          todo-comments-nvim
+          tokyonight-nvim
+          trouble-nvim
+          vim-illuminate
+          vim-startuptime
+          which-key-nvim
+          { name = "LuaSnip"; path = luasnip; }
+          { name = "catppuccin"; path = catppuccin-nvim; }
+          { name = "mini.ai"; path = mini-nvim; }
+          { name = "mini.bufremove"; path = mini-nvim; }
+          { name = "mini.comment"; path = mini-nvim; }
+          { name = "mini.indentscope"; path = mini-nvim; }
+          { name = "mini.pairs"; path = mini-nvim; }
+          { name = "mini.surround"; path = mini-nvim; }
+        ];
+        mkEntryFromDrv = drv:
+          if lib.isDerivation drv then
+            { name = "${lib.getName drv}"; path = drv; }
+          else
+            drv;
+        lazyPath = pkgs.linkFarm "lazy-plugins" (builtins.map mkEntryFromDrv plugins);
+      in
+      ''
+        require("lazy").setup({
+          defaults = {
+            lazy = true,
+          },
+          dev = {
+            path = "${lazyPath}",
+            patterns = { "" },
+            fallback = true,
+          },
+          spec = {
+            { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+            { "nvim-telescope/telescope-fzf-native.nvim", enabled = true },
+            { "williamboman/mason-lspconfig.nvim", enabled = false },
+            { "williamboman/mason.nvim", enabled = false },
+            { import = "plugins" },
+            { "nvim-treesitter/nvim-treesitter", opts = { ensure_installed = {} } },
+          },
+        })
+      '';
   };
 
-  xdg.configFile = {
-    "nvim/lua/config/lazy.lua".text = ''
-      local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-      if not (vim.uv or vim.loop).fs_stat(lazypath) then
-        local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-        local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-        if vim.v.shell_error ~= 0 then
-          vim.api.nvim_echo({
-            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-            { out,                            "WarningMsg" },
-            { "\nPress any key to exit..." },
-          }, true, {})
-          vim.fn.getchar()
-          os.exit(1)
-        end
-      end
-      vim.opt.rtp:prepend(lazypath)
+  xdg.configFile."nvim/parser".source =
+    let
+      parsers = pkgs.symlinkJoin {
+        name = "treesitter-parsers";
+        paths = (pkgs.vimPlugins.nvim-treesitter.withPlugins (plugins: with plugins; [
+          c
+          lua
+        ])).dependencies;
+      };
+    in
+    "${parsers}/parser";
 
-      require("lazy").setup({
-        spec = {
-          { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-          { import = "plugins" },
-        },
-        defaults = {
-          lazy = false,
-          version = false,
-        },
-        install = { colorscheme = { "neopywal" } },
-        checker = {
-          enabled = true,
-          notify = false,
-        },
-        performance = {
-          rtp = {
-            disabled_plugins = {
-              "gzip",
-              "tarPlugin",
-              "tohtml",
-              "tutor",
-              "zipPlugin",
-            },
-          },
-        },
-      })
-    '';
-
-    "nvim/lua/config/options.lua".text = ''
-      -- Options are automatically loaded before lazy.nvim startup
-      -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
-      -- Add any additional options here
-    '';
-
-    "nvim/lua/config/keymaps.lua".text = ''
-      local modes = { "n", "i", "v", "x" }
-      local arrows = { "<Up>", "<Down>", "<Left>", "<Right>" }
-
-      for _, mode in ipairs(modes) do
-        for _, arrow in ipairs(arrows) do
-          vim.keymap.set(mode, arrow, "<Nop>", { noremap = true, silent = true })
-        end
-      end
-    '';
-
-    "nvim/lua/config/autocmds.lua".text = ''
-      -- Autocmds are automatically loaded on the VeryLazy event
-      -- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
-      --
-      -- Add any additional autocmds here
-      -- with `vim.api.nvim_create_autocmd`
-      --
-      -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
-      -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
-    '';
-
-    "nvim/lua/plugins/colorscheme.lua".text = ''
-      return {
-        { "RedsXDD/neopywal.nvim", name = "neopywal", lazy = false, priority = 1000,
-          config = function()
-            local neopywal = require("neopywal")
-            neopywal.setup({ transparent_background = true })
-            vim.cmd.colorscheme("neopywal")
-          end,
-        },
-        {
-          "LazyVim/LazyVim",
-          opts = {
-            colorscheme = "neopywal",
-          },
-        },
-      }
-    '';
-  };
+  xdg.configFile."nvim/lua".source = ./lua;
 }
