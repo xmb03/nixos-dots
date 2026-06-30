@@ -35,14 +35,22 @@
       setopt appendhistory
       autoload -Uz compinit && compinit
 
-      ZSH_HIGHLIGHT_STYLES[command]="fg=#b8bb26,bold"
-      ZSH_HIGHLIGHT_STYLES[builtin]="fg=#83a598"
-      ZSH_HIGHLIGHT_STYLES[alias]="fg=#fabd2f"
-      ZSH_HIGHLIGHT_STYLES[path]="fg=#83a598"
-      ZSH_HIGHLIGHT_STYLES[error]="fg=#fb4934"
-      ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#504945"
+      if [ -f "$HOME/.cache/wal/sequences" ]; then
+        cat "$HOME/.cache/wal/sequences"
+      fi
 
-      PROMPT="%F{#83a598}>%f "
+      if [ -f "$HOME/.cache/wal/colors.sh" ]; then
+        source "$HOME/.cache/wal/colors.sh"
+      fi
+
+      ZSH_HIGHLIGHT_STYLES[command]="fg=$color2,bold"
+      ZSH_HIGHLIGHT_STYLES[builtin]="fg=$color6"
+      ZSH_HIGHLIGHT_STYLES[alias]="fg=$color3"
+      ZSH_HIGHLIGHT_STYLES[path]="fg=$color4"
+      ZSH_HIGHLIGHT_STYLES[error]="fg=$color1"
+      ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=$color8"
+
+      PROMPT="%F{$color4}>%f "
 
       y() {
         if [ -f "$1" ]; then

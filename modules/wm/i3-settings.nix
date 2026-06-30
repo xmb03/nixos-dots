@@ -8,6 +8,9 @@
     [icons]
     icons = "awesome4"
 
+    [icons.overrides]
+    power-off = "\uf011"
+
     [[block]]
     block = "keyboard_layout"
     driver = "xkbevent"
@@ -36,5 +39,15 @@
     block = "time"
     interval = 5
     format = " $icon $timestamp.datetime(f:'%R') "
+
+    [[block]]
+    block = "custom"
+    command = "echo '{\"icon\":\"power-off\",\"text\":\"\"}'"
+    json = true
+    interval = 86400
+    format = " $icon "
+    [[block.click]]
+    button = "left"
+    cmd = "~/.config/i3/scripts/powermenu"
   '';
 }

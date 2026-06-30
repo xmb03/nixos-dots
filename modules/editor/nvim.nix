@@ -6,7 +6,6 @@
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
-    withPython3 = true;
 
     extraPackages = with pkgs; [
       lua-language-server
@@ -15,7 +14,6 @@
     ];
 
     extraLuaConfig = ''
-      -- bootstrap lazy.nvim, LazyVim and your plugins
       require("config.lazy")
     '';
   };
@@ -47,7 +45,7 @@
           lazy = false,
           version = false,
         },
-        install = { colorscheme = { "catppuccin" } },
+        install = { colorscheme = { "neopywal" } },
         checker = {
           enabled = true,
           notify = false,
@@ -73,9 +71,6 @@
     '';
 
     "nvim/lua/config/keymaps.lua".text = ''
-      -- Keymaps are automatically loaded on the VeryLazy event
-      -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
-      -- Add any additional keymaps here
       local modes = { "n", "i", "v", "x" }
       local arrows = { "<Up>", "<Down>", "<Left>", "<Right>" }
 
@@ -99,12 +94,17 @@
 
     "nvim/lua/plugins/colorscheme.lua".text = ''
       return {
-        { "catppuccin", lazy = false, priority = 1000 },
-
+        { "RedsXDD/neopywal.nvim", name = "neopywal", lazy = false, priority = 1000,
+          config = function()
+            local neopywal = require("neopywal")
+            neopywal.setup({ transparent_background = true })
+            vim.cmd.colorscheme("neopywal")
+          end,
+        },
         {
           "LazyVim/LazyVim",
           opts = {
-            colorscheme = "catppuccin",
+            colorscheme = "neopywal",
           },
         },
       }

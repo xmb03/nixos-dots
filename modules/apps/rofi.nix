@@ -6,4 +6,51 @@
     package = pkgs.rofi;
     pass.enable = true;
   };
+
+  xdg.configFile."rofi/config.rasi".text = ''
+    @import "~/.cache/wal/colors-rofi-dark.rasi"
+  '';
+
+  xdg.configFile."rofi/powermenu.rasi".text = ''
+    @import "~/.cache/wal/colors-rofi-dark.rasi"
+
+    configuration {
+        modi: "dmenu";
+        show-icons: false;
+        font: "JetBrainsMono Nerd Font 18";
+    }
+
+    window {
+        width: 750;
+        location: center;
+        anchor: center;
+        padding: 20;
+    }
+
+    listview {
+        spacing: 15;
+        padding: 5;
+        columns: 3;
+        lines: 2;
+        cycle: true;
+        dynamic: false;
+        fixed-columns: true;
+        fixed-height: true;
+    }
+
+    #element {
+        orientation: vertical;
+        padding: 40px;
+        spacing: 0;
+        background-color: @background;
+        border-radius: 0px;
+    }
+
+    #element-text {
+        horizontal-align: 0.5;
+        vertical-align: 0.5;
+        background-color: transparent;
+        text-color: @foreground;
+    }
+  '';
 }

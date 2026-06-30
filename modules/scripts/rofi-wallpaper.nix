@@ -7,6 +7,7 @@ let
 
     apply_wallpaper() {
       local path="$1"
+      wal -i "$path"
       feh --bg-fill "$path"
     }
 
@@ -64,8 +65,4 @@ in
   home.packages = [ wallpaperScript ];
 
   xdg.configFile."i3/scripts/rofi-wallpaper".source = "${wallpaperScript}/bin/rofi-wallpaper";
-
-  xsession.windowManager.i3.extraConfig = ''
-    exec_always --no-startup-id ln -sf ${wallpaperScript}/bin/rofi-wallpaper ~/.config/i3/scripts/rofi-wallpaper
-  '';
 }

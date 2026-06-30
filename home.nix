@@ -14,6 +14,8 @@
     ./modules/services/greenclip.nix
     ./modules/services/udiskie.nix
     ./modules/scripts/rofi-wallpaper.nix
+    ./modules/scripts/powermenu.nix
+    ./modules/theme/wal.nix
   ];
 
   home = {
@@ -64,7 +66,14 @@
     bat
     btop
     fastfetch
+
+    # pywal
+    pywal
   ];
+
+  home.file.".Xresources".text = ''
+    #include "~/.cache/wal/colors.Xresources"
+  '';
 
   programs.home-manager.enable = true;
 }

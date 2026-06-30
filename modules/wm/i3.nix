@@ -29,6 +29,9 @@
       # ====== KEYBOARD ======
       exec_always --no-startup-id xset r rate 200 50
 
+      # ====== MONITOR ======
+      exec_always --no-startup-id xrandr --output DP-0 --primary --mode 1920x1200 --rate 165.00
+
       # ====== BORDERS ======
       default_border pixel 1
       default_floating_border pixel 1
@@ -37,23 +40,23 @@
       for_window [class="^.*"] border pixel 1
       for_window [class="(?i)firefox"] border none
 
-      # ====== WINDOW COLORS  ======
-      set_from_resource $color0 i3wm.color0 #1d2021
-      set_from_resource $color1 i3wm.color1 #fb4934
-      set_from_resource $color2 i3wm.color2 #b8bb26
-      set_from_resource $color3 i3wm.color3 #fabd2f
-      set_from_resource $color4 i3wm.color4 #83a598
-      set_from_resource $color5 i3wm.color5 #d3869b
-      set_from_resource $color6 i3wm.color6 #8ec07c
-      set_from_resource $color7 i3wm.color7 #ebdbb2
-      set_from_resource $color8 i3wm.color8 #504945
-      set_from_resource $color9 i3wm.color9 #fb4934
-      set_from_resource $color10 i3wm.color10 #b8bb26
-      set_from_resource $color11 i3wm.color11 #fabd2f
-      set_from_resource $color12 i3wm.color12 #83a598
-      set_from_resource $color13 i3wm.color13 #d3869b
-      set_from_resource $color14 i3wm.color14 #8ec07c
-      set_from_resource $color15 i3wm.color15 #fbf1c7
+      # ====== WINDOW COLORS (pywal via Xresources) ======
+      set_from_resource $color0 i3wm.color0 #000000
+      set_from_resource $color1 i3wm.color1 #ff0000
+      set_from_resource $color2 i3wm.color2 #00ff00
+      set_from_resource $color3 i3wm.color3 #ffff00
+      set_from_resource $color4 i3wm.color4 #0000ff
+      set_from_resource $color5 i3wm.color5 #ff00ff
+      set_from_resource $color6 i3wm.color6 #00ffff
+      set_from_resource $color7 i3wm.color7 #ffffff
+      set_from_resource $color8 i3wm.color8 #808080
+      set_from_resource $color9 i3wm.color9 #ff5555
+      set_from_resource $color10 i3wm.color10 #55ff55
+      set_from_resource $color11 i3wm.color11 #ffff55
+      set_from_resource $color12 i3wm.color12 #5555ff
+      set_from_resource $color13 i3wm.color13 #ff55ff
+      set_from_resource $color14 i3wm.color14 #55ffff
+      set_from_resource $color15 i3wm.color15 #f0f0f0
 
       client.focused          $color4 $color4 $color15 $color4 $color4
       client.focused_inactive $color8 $color8 $color15 $color8 $color8
@@ -63,11 +66,11 @@
       client.background       $color0
 
       # ====== BAR ======
-      set_from_resource $bg      i3wm.color0 #1d2021
-      set_from_resource $fg      i3wm.color7 #ebdbb2
-      set_from_resource $primary i3wm.color4 #83a598
-      set_from_resource $dark    i3wm.color8 #504945
-      set_from_resource $urgent  i3wm.color1 #fb4934
+      set_from_resource $bg      i3wm.color0 #000000
+      set_from_resource $fg      i3wm.color7 #ffffff
+      set_from_resource $primary i3wm.color1 #ff0000
+      set_from_resource $dark    i3wm.color8 #808080
+      set_from_resource $urgent  i3wm.color9 #ff5555
 
       bar {
           status_command i3status-rs ~/.config/i3/i3status-rs/config.toml
@@ -107,6 +110,9 @@
       bindsym $mod+d exec rofi -show drun
       bindsym $mod+v exec rofi -modi "clipboard:greenclip print" -show clipboard
       bindsym $mod+Tab exec --no-startup-id "rofi -show"
+
+      # ====== POWER MENU ======
+      bindsym $mod+p exec ~/.config/i3/scripts/powermenu
 
       # ====== WALLPAPER ======
       bindsym $mod+a exec ~/.config/i3/scripts/rofi-wallpaper

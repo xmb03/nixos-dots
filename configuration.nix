@@ -5,7 +5,6 @@
     ./hardware-configuration.nix
     ./modules/hardware/monitor.nix
     ./modules/hardware/touchpad.nix
-    ./modules/theme/stylix.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -35,8 +34,6 @@
     enable = true;
     pulse.enable = true;
   };
-
-  services.libinput.enable = true;
 
   services.openssh.enable = true;
 

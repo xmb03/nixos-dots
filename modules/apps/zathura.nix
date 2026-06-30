@@ -8,4 +8,11 @@
       recolor-keephue = "true";
     };
   };
+
+  xdg.configFile."zathura/zathurarc".text = ''
+    include "~/.cache/wal/colors-zathurarc"
+
+    set recolor "true"
+    set recolor-keephue "true"
+  '';
 }
