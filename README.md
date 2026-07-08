@@ -1,64 +1,114 @@
-> **⚠️ WARNING — NOT A GENERAL-PURPOSE CONFIG**
-> This is my personal NixOS configuration. It is **not** designed to be cloned and used as-is by anyone else.
-> Hardcoded paths, user-specific settings (name `xmb03`), KDE Plasma + i3 hybrid setup, and machine-specific
-> hardware configs are baked in. Treat this as a reference / inspiration, not a reusable template.
+# xmb03 NixOS Configuration
 
----
+Personal NixOS + home-manager configuration for GIGABYTE G6X9MG laptop (Intel i7-13650HX + NVIDIA RTX 4050).
 
-## Screenshots
+## Quick start on a new machine
 
-![desktop](Pictures/20260705_110940.png)
-![rofi](Pictures/20260705_101455.png)
+```bash
+# 1. Clone
+git clone https://github.com/xmb03/nixos-dots.git ~/.config/nixos
 
----
+# 2. Generate hardware config for YOUR machine
+sudo nixos-generate-config --show-hardware-config > ~/.config/nixos/hardware-configuration.nix
 
-## Structure
+# 3. Edit configuration.nix — change hostname, user, timezone, locale, etc.
+#    See "What to change per-machine" below
 
+# 4. Rebuild
+sudo nixos-rebuild switch --flake ~/.config/nixos#nixos
+
+# 5. Set user password
+passwd
 ```
-.
-├── configuration.nix              # NixOS system config
-├── hardware-configuration.nix     # Auto-generated (do not edit)
-├── home.nix                       # home-manager user config
-├── flake.nix                      # Flake entry point
-├── nvidia.nix                     # NVIDIA GPU driver module (PRIME offload)
-├── Pictures/                      # Screenshots
-├── modules/
-│   ├── apps/
-│   │   ├── rofi.nix               # Rofi launcher (theme, pass, drun)
-│   │   ├── yazi.nix               # Yazi file manager (plugins, keymap)
-│   │   └── basalt.nix             # TUI Obsidian (basalt-tui)
-│   ├── editor/
-│   │   ├── vim.nix                # Vim config (LSP, plugins)
-│   │   ├── neovim.nix             # Neovim config (LSP, treesitter, cmp)
-│   │   └── neovim/init.lua        # Neovim init Lua
-│   ├── firefox/default.nix        # Firefox config & extensions (textfox)
-│   ├── gtk/gtk.nix                # GTK settings, fontconfig, bookmarks
-│   ├── hardware/
-│   │   ├── monitor.nix            # Monitor resolution (xrandr, AC-aware)
-│   │   ├── touchpad.nix           # Touchpad (libinput)
-│   │   └── power.nix              # Power mgmt (auto-cpufreq, thermald, powertop)
-│   ├── scripts/
-│   │   ├── powermenu.nix          # Rofi power menu
-│   │   └── rofi-wallpaper.nix     # Rofi wallpaper picker
-│   ├── services/
-│   │   ├── clipmenu.nix           # Clipboard manager (clipmenu)
-│   │   ├── networkmanager.nix     # NetworkManager tunings (DNS, DHCP, IPv6 off)
-│   │   ├── ollama.nix             # Ollama LLM server (CUDA)
-│   │   ├── redshift.nix           # Blue-light filter
-│   │   ├── udiskie.nix            # Auto-mount USB
-│   │   └── zapret.nix             # DPI bypass
-│   ├── shell/zsh.nix              # Zsh config (aliases, history, plugins)
-│   ├── term/kitty.nix             # Kitty terminal
-│   ├── theme/
-│   │   ├── stylix.nix             # Stylix theme (wallpaper colors)
-│   │   └── assets/                # Wallpaper symlink for Stylix
-│   ├── wm/
-│   │   ├── i3.nix                 # i3 keybindings & settings
-│   │   ├── i3-settings.nix        # i3status-rust bar
-│   │   ├── picom.nix              # Picom compositor (GLX vsync)
-│   │   └── power-char             # Power icon
-│   └── zathura/zathura.nix        # PDF viewer
+
+## What to change per-machine
+
+| File | What to change |
+|---|---|
+| `hardware-configuration.nix` | **Regenerate** via `nixos-generate-config --show-hardware-config` |
+| `configuration.nix` | `networking.hostName`, `time.timeZone`, keyboard layout, username |
+| `nvidia.nix` | `nvidiaBusId` and `intelBusId` (see `lspci` output) |
+| `home.nix` | `home.username`, `home.homeDirectory` |
+
+### Finding NVIDIA/Intel bus IDs
+
+```bash
+lspci | grep -E "VGA|3D"
+# Example output:
+# 00:02.0 VGA compatible controller: Intel Corporation ...
+# 01:00.0 3D controller: NVIDIA Corporation AD107M [GeForce RTX 4050 Max-Q / Mobile]
 ```
+
+Convert to Nix format: `"PCI:bus:device:function"` (hex without leading zeros).  
+For the example above: `intelBusId = "PCI:0:2:0"`, `nvidiaBusId = "PCI:1:0:0"`.
+
+## File-by-file reference
+
+### Root files
+
+| File | Purpose |
+|---|---|
+| `flake.nix` | Flake entry point. Defines nixpkgs channel, inputs (home-manager, stylix, textfox, NUR), and the NixOS configuration. Home-manager is integrated as a NixOS module. |
+| `configuration.nix` | NixOS system config. Bootloader, kernel, networking, X11/LightDM, PipeWire, printing, locale, user accounts, system packages. Imports all modules from `modules/`. |
+| `hardware-configuration.nix` | **Auto-generated.** Disk layout, kernel modules, CPU microcode. Run `nixos-generate-config` to create. |
+| `nvidia.nix` | NVIDIA driver + PRIME Offload. Intel iGPU drives display, NVIDIA used only via `nvidia-offload` command. D3Cold enabled (GPU suspends on battery). |
+| `home.nix` | home-manager entry point. Imports all user-level modules. Lists user packages (maim, rofi, dunst, kitty, etc.). |
+
+### `/modules/wm/` — Window Manager
+
+| File | Purpose |
+|---|---|
+| `i3.nix` | i3 window manager: keybindings (vim-style), window borders, gaps, bar config, startup programs, resize mode. |
+| `i3-settings.nix` | i3status-rust bar: blocks (keyboard layout, backlight, battery, volume, music, network, clock, power menu). Battery block hides text on charger. |
+| `picom.nix` | Compositor: GLX backend, vsync on. No shadows, no fade, no blur, no animations. Pure bugfix compositing. |
+
+### `/modules/hardware/` — Hardware
+
+| File | Purpose |
+|---|---|
+| `monitor.nix` | Auto-switch refresh rate at X startup: 165 Hz on AC, 60.09 Hz on battery. Uses `xrandr`. |
+| `power.nix` | Power management: `auto-cpufreq` (powersave on battery, performance on AC), `thermald`, `powertop`, `upower`. **Udev rule** for switching refresh rate on AC plug/unplug. NVIDIA finegrained PM. |
+| `touchpad.nix` | libinput touchpad configuration (tap-to-click, natural scrolling, etc.). |
+
+### `/modules/services/` — Services
+
+| File | Purpose |
+|---|---|
+| `networkmanager.nix` | NetworkManager: internal DHCP, static DNS (Yandex + Google), IPv6 disabled, `wait-online` disabled (fast boot). |
+| `redshift.nix` | Blue-light filter: 6500K day / 3500K night, Moscow coords, smooth 1s fade. |
+| `clipmenu.nix` | Clipboard history manager (systemd user service). Access via `Mod4+v`. |
+| `udiskie.nix` | Automatic USB drive mounting. |
+| `ollama.nix` | Ollama LLM server with CUDA (runs on NVIDIA via offload). |
+| `zapret.nix` | DPI bypass for Russia. Whitelist: GitHub, GitLab, SoundCloud. |
+
+### `/modules/apps/` — Applications
+
+| File | Purpose |
+|---|---|
+| `rofi.nix` | Application launcher: Stylix-themed `.rasi`, drun mode, pass integration, custom colors. |
+| `yazi.nix` | File manager: plugins (diff, git, smart-enter, chmod, compress), show hidden files, vim opener. |
+| `basalt.nix` | TUI Obsidian client (basalt-tui), built from source. |
+
+### `/modules/editor/` — Editors
+
+| File | Purpose |
+|---|---|
+| `vim.nix` | Vim config: clipboard=unnamedplus, floaterm (Ctrl+/), fzf, LSP (rust-analyzer). Arrow keys disabled. |
+| `neovim.nix` | Neovim config: telescope, nvim-cmp (LSP/buffer/path), luasnip, treesitter, LSP servers (pyright, nil, lua-ls, typescript, marksman). |
+| `neovim/init.lua` | Neovim init Lua (loaded via `initLua`). |
+
+### `/modules/` — Other
+
+| File | Purpose |
+|---|---|
+| `firefox/default.nix` | Firefox: force-installed extensions (uBlock Origin, Dark Reader, Vimium C, SingleFile, Privacy Badger, Search by Image), textfox theme, search = DuckDuckGo, telemetry off. |
+| `gtk/gtk.nix` | GTK theme, fontconfig (JetBrainsMono for all font categories), file manager bookmarks. |
+| `shell/zsh.nix` | Zsh: autosuggestions, syntax highlighting, history (10k, shared), aliases (`up`, `n`, `cat→bat`, `top→btop`, `dn` for GC), custom scripts (`yc`). |
+| `term/kitty.nix` | Kitty terminal: window padding 9px, hide decorations, audio bell off. |
+| `theme/stylix.nix` | Stylix theming: grayscale-dark scheme, JetBrainsMono fonts. |
+| `zathura/zathura.nix` | PDF viewer: clipboard selection, dark recolor with hue preservation. |
+| `scripts/powermenu.nix` | Rofi power menu: Lock / Logout / Suspend / Hibernate / Reboot / Shutdown. Accessed via `Mod4+p`. |
+| `scripts/rofi-wallpaper.nix` | Rofi wallpaper picker: grid view, sets feh wallpaper, copies to Stylix assets for rebuild. |
 
 ## Keybindings
 
@@ -75,8 +125,8 @@
 | `Mod4 + t` | Kitty terminal |
 | `Mod4 + q` | Kill focused window |
 | **Screenshots** | |
-| `Print` | Fullscreen capture → clipboard + file |
-| `Mod4 + Shift + p` | Region capture → clipboard + file |
+| `Print` | Fullscreen capture → clipboard + file (in `~/Pictures/`) |
+| `Mod4 + Shift + s` | Region capture → clipboard + file |
 | **Focus (vim-style)** | |
 | `Mod4 + j/k/l/;` | Focus left / down / up / right |
 | `Mod4 + ←/↓/↑/→` | Same (arrow keys) |
@@ -104,12 +154,23 @@
 | `Mod4 + Shift + r` | Restart i3 |
 | `Mod4 + Shift + e` | Exit i3 (confirmation dialog) |
 
+## Power management
+
+| Feature | Implementation |
+|---|---|
+| CPU governor | `auto-cpufreq` — powersave on battery, performance on AC |
+| Turbo | Disabled on battery, enabled on AC |
+| Refresh rate | 60.09 Hz on battery, 165 Hz on AC |
+| NVIDIA GPU | D3Cold (runtime suspend) on battery, wakes only via `nvidia-offload` |
+| Switch on AC change | udev rule (`ac-refresh`) triggers xrandr + optional GPU PM |
+
 ## Stack
 
 | Component | Choice |
-|---|---|---|
-| Window manager | i3 (with KDE Plasma 6 login) |
-| Compositor | Picom (GLX vsync) |
+|---|---|
+| Distribution | NixOS 26.11 (unstable) |
+| Window manager | i3 |
+| Compositor | Picom (GLX vsync, no effects) |
 | Display manager | LightDM (auto-login) |
 | Bar | i3status-rust |
 | Launcher | Rofi |
@@ -120,25 +181,24 @@
 | Browser | Firefox (textfox theme) |
 | Notifications | Dunst |
 | Clipboard | clipmenu (rofi frontend) |
-| Screenshots | maim |
-| Theming | Stylix |
+| Screenshots | maim (+ slop for region) |
+| GPU drivers | NVIDIA open kernel modules, PRIME Offload |
+| Theming | Stylix (grayscale-dark) |
 | Audio | PipeWire |
 | LLM | Ollama (CUDA) |
-| Notes | Basalt (TUI Obsidian) |
-| DPI bypass | zapret |
 
-## Applying changes
+## Commands
 
 ```bash
-# Full system rebuild
-sudo nixos-rebuild switch --flake .#nixos
+# Full rebuild
+sudo nixos-rebuild switch --flake ~/.config/nixos#nixos
 
-# home-manager only
-home-manager switch --flake .
+# Garbage collection
+sudo nix-collect-garbage -d && sudo nix-collect-garbage --delete-older-than 30d
+
+# Run app on NVIDIA GPU (instead of Intel)
+nvidia-offload <command>
+
+# Home-manager only (user-level changes)
+home-manager switch --flake ~/.config/nixos
 ```
-
-## Adding a new module
-
-1. Create `modules/<category>/<name>.nix`
-2. Add `./modules/<category>/<name>.nix` to the `imports` list in `home.nix`
-3. Rebuild with `nixos-rebuild switch`
