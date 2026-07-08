@@ -2,6 +2,11 @@
 
 Personal NixOS + home-manager configuration for GIGABYTE G6X9MG laptop (Intel i7-13650HX + NVIDIA RTX 4050).
 
+## Screenshots
+
+![desktop](Pictures/20260705_110940.png)
+![rofi](Pictures/20260705_101455.png)
+
 ## Quick start on a new machine
 
 ```bash
