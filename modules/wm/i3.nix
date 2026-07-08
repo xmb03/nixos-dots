@@ -76,6 +76,10 @@
         { command = "xset r rate 200 50"; always = true; notification = false; }
         # Desktop Entry autostart (XDG autostart)
         { command = "dex --autostart --environment i3"; notification = false; }
+        # Restore last wallpaper on login
+        { command = "rofi-wallpaper --restore"; always = true; notification = false; }
+        # xss-lock — слушает сигнал блокировки от logind, запускает i3lock
+        { command = "${pkgs.xss-lock}/bin/xss-lock -- ${pkgs.i3lock}/bin/i3lock -n -c 000000"; always = true; notification = false; }
         # NetworkManager system tray applet
         { command = "nm-applet"; notification = false; }
       ];

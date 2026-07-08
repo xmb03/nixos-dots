@@ -6,20 +6,24 @@
 
 let
   wallpaperScript = pkgs.writeShellScriptBin "rofi-wallpaper" ''
-    # Directory containing wallpaper images
+    CACHE="$HOME/.cache/wallpaper-current"
     WALL_DIR="$HOME/Pictures/Wallpapers"
-    # Stylix asset directory where the wallpaper is stored for rebuild detection
-    # Must match the path in modules/theme/stylix.nix
-    STYLIX_ASSETS="/home/xmb03/nixtest/modules/theme/assets"
-    STYLIX_WALL="$STYLIX_ASSETS/wallpaper.png"
 
-    # Exit with error if wallpaper directory doesn't exist
+    restore() {
+      if [ -f "$CACHE" ]; then
+        path=$(cat "$CACHE")
+        [ -f "$path" ] && ${pkgs.feh}/bin/feh --bg-fill "$path"
+      fi
+      exit 0
+    }
+
+    [ "$1" = "--restore" ] && restore
+
     if [ ! -d "$WALL_DIR" ]; then
       ${pkgs.libnotify}/bin/notify-send "Error" "Directory $WALL_DIR not found."
       exit 1
     fi
 
-    # Build Rofi data string with icons for each wallpaper
     ROFI_DATA=""
     for pic in "$WALL_DIR"/*; do
       if [ -f "$pic" ]; then
@@ -28,7 +32,6 @@ let
       fi
     done
 
-    # Show Rofi menu with wallpaper grid (3 columns, icon + text)
     CHOICE=$(echo -en "$ROFI_DATA" | ${pkgs.rofi}/bin/rofi -dmenu -i -p "Wallpaper" \
       -show-icons -theme-str '
             listview {
@@ -48,19 +51,12 @@ let
             }
         ')
 
-    # If a wallpaper was selected, apply it
     if [ -n "$CHOICE" ]; then
       FULL_PATH="$WALL_DIR/$CHOICE"
-
-      # Set wallpaper using feh
       ${pkgs.feh}/bin/feh --bg-fill "$FULL_PATH"
-
-      # Copy wallpaper to Stylix assets for rebuild detection
-      mkdir -p "$STYLIX_ASSETS"
-      cp "$FULL_PATH" "$STYLIX_WALL"
-
-      # Notify the user to rebuild for new Stylix colors
-      ${pkgs.libnotify}/bin/notify-send "Wallpaper set!" "Run: nixos-rebuild switch for new Stylix colors"
+      mkdir -p "$(dirname "$CACHE")"
+      echo "$FULL_PATH" > "$CACHE"
+      ${pkgs.libnotify}/bin/notify-send "Обои изменены"
     fi
   '';
 in

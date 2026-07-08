@@ -16,7 +16,7 @@ let
 
     # Execute the selected action
     case $selected in
-      *Lock)      ${pkgs.systemd}/bin/loginctl lock-session ;;
+      *Lock)      ${pkgs.i3lock}/bin/i3lock -c 000000 ;;
       *Logout)    ${pkgs.i3}/bin/i3-msg exit ;;
       *Suspend)   ${pkgs.systemd}/bin/systemctl suspend ;;
       *Hibernate) ${pkgs.systemd}/bin/systemctl hibernate ;;
