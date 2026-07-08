@@ -1,0 +1,11 @@
+*.un~
+result
+passwords.csv
+/apps/
+base/
+book/
+Documents/
+Pictures/Wallpapers/
+*.pdf
+*.djvu
+*.epub
