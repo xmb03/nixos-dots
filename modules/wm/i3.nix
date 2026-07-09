@@ -49,12 +49,6 @@
         };
       };
 
-      # Window gaps (empty space between windows)
-      gaps = {
-        inner = 2;
-        outer = 15;
-      };
-
       # Status bar(s)
       bars = [
         # Combine Stylix theme colors with custom bar settings
