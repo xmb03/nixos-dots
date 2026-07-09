@@ -26,10 +26,19 @@
           };
         };
 
-        # Apply Stylix colors to the bar theme
+        # Apply Stylix colors + battery overrides (good/warning/critical)
         theme = {
           theme = "native";
-          overrides = config.lib.stylix.i3status-rust.bar;
+          overrides = config.lib.stylix.i3status-rust.bar // {
+            good_bg = "#22AA22";
+            good_fg = "#000000";
+            info_bg = "#AAAA22";
+            info_fg = "#000000";
+            warning_bg = "#AAAA22";
+            warning_fg = "#000000";
+            critical_bg = "#AA2222";
+            critical_fg = "#000000";
+          };
         };
       };
 
@@ -65,6 +74,10 @@
           format = " $icon $percentage $time ";
           charging_format = "";
           full_format = "";
+          info = 80.0;
+          good = 80.0;
+          warning = 40.0;
+          critical = 20.0;
         }
 
         # Audio volume with pipewire support
