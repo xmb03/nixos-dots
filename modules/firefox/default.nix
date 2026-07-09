@@ -1,4 +1,5 @@
 { config, pkgs, inputs, lib, ... }:
+with lib;
 
 {
   imports = [ inputs.textfox.homeManagerModules.default ];
@@ -54,6 +55,17 @@
       "browser.newtabpage.activity-stream.telemetry" = false;
       "browser.ping-centre.telemetry" = false;
       "browser.toolbars.bookmarks.visibility" = "never";
+      "font.name.monospace.x-western" = mkForce "JetBrainsMono Nerd Font";
+      "font.name.serif.x-western" = mkForce "JetBrainsMono Nerd Font";
+      "font.name.sans-serif.x-western" = mkForce "JetBrainsMono Nerd Font";
+      "font.name.monospace.x-cyrillic" = mkForce "JetBrainsMono Nerd Font";
+      "font.name.serif.x-cyrillic" = mkForce "JetBrainsMono Nerd Font";
+      "font.name.sans-serif.x-cyrillic" = mkForce "JetBrainsMono Nerd Font";
+      "font.default.x-western" = mkForce "sans-serif";
+      "font.default.x-cyrillic" = mkForce "sans-serif";
+      "font.size.variable.x-western" = mkForce 14;
+      "font.size.variable.x-cyrillic" = mkForce 14;
+      "browser.display.use_document_fonts" = mkForce 0;
     };
   };
 
