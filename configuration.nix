@@ -14,8 +14,10 @@
     ./modules/hardware/touchpad.nix# Touchpad configuration via libinput
     ./modules/services/networkmanager.nix  # NetworkManager + networking tweaks
     ./modules/hardware/power.nix         # Power management (auto-cpufreq, thermald, NVIDIA PM, powertop)
+    ./modules/hardware/win.nix           # Windows NTFS partitions mount
     ./modules/services/ollama.nix        # Ollama LLM server with CUDA
     ./modules/services/zapret.nix
+    ./modules/services/qbittorrent.nix
   ];
 
   # Boot configuration

@@ -50,7 +50,10 @@
       };
 
       # Window gaps (empty space between windows)
-      gaps = { };
+      gaps = {
+        inner = 2;
+        outer = 15;
+      };
 
       # Status bar(s)
       bars = [
@@ -104,6 +107,7 @@ in "exec sh -c 'FILE=~/Pictures/$(date +%Y%m%d_%H%M%S).png && ${maim} -s \"$FILE
         "Mod4+Tab"       = "exec rofi -show";
         "Mod4+p"         = "exec powermenu";
         "Mod4+a"         = "exec rofi-wallpaper";
+        "Mod4+Shift+a"   = "exec rofi-theme";
         "Mod4+r"         = "mode resize";
 
         # Volume control

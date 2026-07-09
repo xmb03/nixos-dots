@@ -21,6 +21,7 @@
     ./modules/services/udiskie.nix   # Udiskie automatic USB mount
     ./modules/scripts/powermenu.nix  # Rofi-based power menu script
     ./modules/scripts/rofi-wallpaper.nix # Rofi wallpaper picker script
+    ./modules/scripts/rofi-theme.nix     # Rofi Stylix palette picker
     ./modules/firefox/default.nix    # Firefox config, extensions, textfox theme
     ./modules/editor/vim.nix         # Vim config, plugins, settings
     ./modules/editor/neovim.nix      # Neovim config, plugins, settings

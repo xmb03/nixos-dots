@@ -81,7 +81,7 @@
       top   = "btop";                      # System monitor
       m     = "mpv";                       # Media player
       p     = "python";
-      dn    = "sudo nix-collect-garbage -d && sudo nix-collect-garbage --delete-older-than 30d";
+      dn    = "sudo nix-collect-garbage --delete-older-than 30d";
       tgw   = "steam-run ~/nixtest/apps/TgWsProxy_linux_amd64";
       v     = "vim";
       n     = "nvim";
