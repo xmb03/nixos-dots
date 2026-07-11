@@ -13,6 +13,7 @@
     ./modules/apps/rofi.nix          # Rofi launcher config (theme, drun, pass)
     ./modules/apps/yazi.nix          # Yazi file manager config (plugins)
     ./modules/term/kitty.nix         # Kitty terminal emulator settings
+    ./modules/term/zellij.nix        # Zellij terminal multiplexer
     ./modules/shell/zsh.nix          # Zsh shell config (aliases, history, plugins)
     ./modules/zathura/zathura.nix    # Zathura PDF viewer settings
     ./modules/gtk/gtk.nix            # GTK theme, fontconfig, bookmarks
@@ -40,6 +41,7 @@
   stylix.targets = {
     zathura.enable = true;  # Dark theme for PDF viewer
     kitty.enable = true;    # Terminal colors from wallpaper
+    zellij.enable = true;   # Zellij theme from wallpaper
     i3.enable = true;       # i3 bar and border colors
     rofi.enable = true;   # Stylix-managed rofi theme
     yazi.enable = true;     # Yazi file manager colors
@@ -90,9 +92,11 @@
     localsend        # Local file sharing (LAN, no internet needed)
     telegram-desktop # Telegram messaging app
     mpv
-    
+    rofimoji            # Emoji picker with Russian support
+
     # python
     python3
+    rustlings
   ];
 
   # Enable home-manager (must be set for the user)

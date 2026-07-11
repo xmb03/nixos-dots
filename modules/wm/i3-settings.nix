@@ -114,6 +114,21 @@
           }];
         }
 
+        # Weather display (met.no, бесплатно без API-ключа)
+        {
+          block = "weather";
+          format = " $icon $temp ";
+          # Широта/долгота Бердянска
+          service = {
+            name = "metno";
+            coordinates = [ "46.75" "36.78" ];
+          };
+          click = [{
+            button = "left";
+            cmd = "${pkgs.xdg-utils}/bin/xdg-open 'https://yandex.ru/pogoda/?lat=46.75&lon=36.78'";
+          }];
+        }
+
         # Clock / time display
         {
           block = "time";

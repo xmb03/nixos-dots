@@ -1,0 +1,6 @@
+model = "gemma-4-e4b-strict"
+api_url = "http://127.0.0.1:11434/api/generate"
+notes_dir = "~/Documents/xmb03/IT/notes/Rust"
+lang = "ru"
+note_size = "big"
+notes_count = 7

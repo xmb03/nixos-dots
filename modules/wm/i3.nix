@@ -8,6 +8,10 @@
     enable = true;
     package = pkgs.i3;
 
+    extraConfig = ''
+      default_orientation horizontal
+    '';
+
     config = {
       # Super/Windows key as the main modifier
       modifier = "Mod4";
@@ -102,6 +106,7 @@ in "exec sh -c 'FILE=~/Pictures/$(date +%Y%m%d_%H%M%S).png && ${maim} -s \"$FILE
         "Mod4+p"         = "exec powermenu";
         "Mod4+a"         = "exec rofi-wallpaper";
         "Mod4+Shift+a"   = "exec rofi-theme";
+        "Mod4+m"         = "exec rofimoji";
         "Mod4+r"         = "mode resize";
 
         # Volume control
@@ -141,8 +146,8 @@ in "exec sh -c 'FILE=~/Pictures/$(date +%Y%m%d_%H%M%S).png && ${maim} -s \"$FILE
         # Layout management
         "Mod4+h"               = "split h";      # Horizontal split
         "Mod4+f"               = "fullscreen toggle";
+        "Mod4+e"               = "exec kitty -e yazi";
         "Mod4+s"               = "layout stacking";
-        "Mod4+e"               = "layout toggle split";
         "Mod4+Shift+space"     = "floating toggle";
         "Mod4+space"           = "focus mode_toggle";
 

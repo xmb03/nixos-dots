@@ -8,6 +8,7 @@
   # Add custom directories to the PATH environment variable
   home.sessionPath = [
     "$HOME/.npm-global/bin"
+    "$HOME/.local/bin"
   ];
 
   # Additional shell packages and custom scripts
@@ -82,10 +83,12 @@
       m     = "mpv";                       # Media player
       p     = "python";
       dn    = "sudo nix-collect-garbage --delete-older-than 30d";
+      fp    = "~/Apps/fp/target/release/fp";
       tgw   = "steam-run ~/nixtest/apps/TgWsProxy_linux_amd64";
       v     = "vim";
       n     = "nvim";
       yb = "yazi ~/Documents/xmb03";
+      z  = "zellij";
     };
   };
 }

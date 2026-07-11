@@ -26,8 +26,6 @@
   boot.loader.systemd-boot.enable = true;
   # Allow the bootloader to modify EFI variables (needed for updates)
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.timeout = 0;
-
   systemd.services.systemd-udev-settle.enable = false;
 
   # Use the latest available Linux kernel

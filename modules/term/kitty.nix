@@ -21,6 +21,9 @@
       enable_audio_bell = "no";
       # Don't prompt for confirmation when closing multiple windows
       confirm_os_window_close = 0;
+
+      # Launch zellij automatically on kitty start
+      shell = "zellij --layout welcome";
     };
   };
 }
