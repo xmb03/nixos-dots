@@ -84,7 +84,8 @@
       p     = "python";
       dn    = "sudo nix-collect-garbage --delete-older-than 30d";
       fp    = "~/Apps/fp/target/release/fp";
-      tgw   = "steam-run ~/nixtest/apps/TgWsProxy_linux_amd64";
+      nn    = "~/Apps/ollama-notes/target/release/nn";
+      tgw   = "steam-run ~/Apps/tgw/squashfs-root/usr/bin/main.bin";
       v     = "vim";
       n     = "nvim";
       yb = "yazi ~/Documents/xmb03";

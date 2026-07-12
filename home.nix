@@ -93,9 +93,11 @@
     telegram-desktop # Telegram messaging app
     mpv
     rofimoji            # Emoji picker with Russian support
+    obs-studio
 
     # python
     python3
+    # rust
     rustlings
   ];
 
