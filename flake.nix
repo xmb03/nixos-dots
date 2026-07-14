@@ -17,15 +17,12 @@
     # Stylix - automatic theming system that generates colors from wallpaper
     stylix.url = "github:nix-community/stylix";
 
-    # Textfox - Firefox CSS theme for stylish browser appearance
-    textfox.url = "github:adriankarlen/textfox";
-
     # NUR (Nix User Repository) - community package repository
     nur.url = "github:nix-community/NUR";
   };
 
   # Outputs define what this flake produces (system configurations)
-  outputs = { nixpkgs, home-manager, stylix, textfox, nur, ... }@inputs: {
+  outputs = { nixpkgs, home-manager, stylix, nur, ... }@inputs: {
     # Define a NixOS system configuration named "nixos"
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       # System architecture (64-bit Intel/AMD)

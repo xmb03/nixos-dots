@@ -16,7 +16,6 @@
     ./modules/hardware/power.nix         # Power management (auto-cpufreq, thermald, NVIDIA PM, powertop)
     ./modules/hardware/win.nix           # Windows NTFS partitions mount
     ./modules/services/ollama.nix        # Ollama LLM server with CUDA
-    ./modules/services/zapret.nix
     ./modules/services/qbittorrent.nix
   ];
 
@@ -35,6 +34,7 @@
   # ----------
   # Hostname used on the network
   networking.hostName = "xmb03";
+  networking.nftables.enable = true;
 
   # Time configuration
   # ------------------

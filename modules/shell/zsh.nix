@@ -84,12 +84,14 @@
       p     = "python";
       dn    = "sudo nix-collect-garbage --delete-older-than 30d";
       fp    = "~/Apps/fp/target/release/fp";
-      nn    = "~/Apps/ollama-notes/target/release/nn";
-      tgw   = "steam-run ~/Apps/tgw/squashfs-root/usr/bin/main.bin";
+      nn    = "~/Apps/ollama-notes/target/release/genote";
+      tgw   = "steam-run ~/Apps/tgw/tgwsproxy";
+      pp    = "~/Apps/proxy-scraper-checker/target/release/proxy-scraper-checker";
       v     = "vim";
       n     = "nvim";
       yb = "yazi ~/Documents/xmb03";
       z  = "zellij";
+      dp = "DEFAULT_THINKING=1 nix run --no-write-lock-file /home/xmb03/Apps/Deepseek-API#deepseek-api";
     };
   };
 }

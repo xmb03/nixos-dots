@@ -2,7 +2,7 @@
 with lib;
 
 {
-  imports = [ inputs.textfox.homeManagerModules.default ];
+  programs.firefox.enable = true;
 
   programs.firefox.policies = {
     ExtensionSettings = {
@@ -67,10 +67,5 @@ with lib;
       "font.size.variable.x-cyrillic" = mkForce 14;
       "browser.display.use_document_fonts" = mkForce 0;
     };
-  };
-
-  textfox = {
-    enable = true;
-    profiles = [ "default" ];
   };
 }

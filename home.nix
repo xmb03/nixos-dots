@@ -25,8 +25,7 @@
     ./modules/scripts/rofi-theme.nix     # Rofi Stylix palette picker
     ./modules/firefox/default.nix    # Firefox config, extensions, textfox theme
     ./modules/editor/vim.nix         # Vim config, plugins, settings
-    ./modules/editor/neovim.nix      # Neovim config, plugins, settings
-    ./modules/apps/basalt.nix        # Tui obsidian in terminal
+    ./modules/chromium/default.nix
   ];
 
   # Home Manager user metadata
@@ -94,9 +93,6 @@
     mpv
     rofimoji            # Emoji picker with Russian support
     obs-studio
-
-    # python
-    python3
     # rust
     rustlings
   ];
