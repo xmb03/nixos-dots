@@ -19,6 +19,7 @@
 
     # NUR (Nix User Repository) - community package repository
     nur.url = "github:nix-community/NUR";
+
   };
 
   # Outputs define what this flake produces (system configurations)

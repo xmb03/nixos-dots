@@ -47,6 +47,7 @@
     experimental-features = [ "nix-command" "flakes" ];
     max-substitution-jobs = 128;
     http-connections = 128;
+    sandbox = true;
 
     substituters = [
       "https://cache.nixos.org"
@@ -55,7 +56,6 @@
 
     auto-optimise-store = true;
   };
-
 
   # Internationalization
   # --------------------

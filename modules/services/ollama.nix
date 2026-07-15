@@ -32,7 +32,7 @@ in
 {
   services.ollama = {
     enable = true;
-    package = pkgs.ollama-cuda;
+    package = pkgs.ollama;
     host = "127.0.0.1";
     port = 11434;
     openFirewall = false;
@@ -52,7 +52,7 @@ in
       done
 
       if ! OLLAMA_HOST=127.0.0.1:11434 HOME=/var/lib/ollama ollama list 2>/dev/null | grep -q "gemma-4-e4b-strict"; then
-        OLLAMA_HOST=127.0.0.1:11434 HOME=/var/lib/ollama ollama create gemma-4-e4b-strict -f ${modelfile}
+        OLLAMA_HOST=127.0.0.1:11434 HOME=/var/lib/ollama ollama create gemma-4-e4b-strict -f ${modelfile} || true
       fi
 
       mkdir -p ${home}/.ollama
