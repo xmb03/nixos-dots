@@ -20,6 +20,12 @@
     # NUR (Nix User Repository) - community package repository
     nur.url = "github:nix-community/NUR";
 
+    # Helium browser (minimal browser)
+    helium-flake = {
+      url = "github:oxcl/nix-flake-helium-browser";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   # Outputs define what this flake produces (system configurations)

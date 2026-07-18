@@ -7,7 +7,6 @@
 {
   # Add custom directories to the PATH environment variable
   home.sessionPath = [
-    "$HOME/.npm-global/bin"
     "$HOME/.local/bin"
   ];
 
@@ -15,6 +14,7 @@
   home.packages = [
     # Zsh completion system (automatically configured by home-manager)
     pkgs.zsh-completions
+    pkgs.fd
 
     # Custom "y" command: copies file content to clipboard
     # Usage: y <filename>
@@ -26,7 +26,47 @@
         echo "File not found."
       fi
     '')
+
+    # histy — interactive TUI for shell history
+    # Uses npx -y to auto-fetch latest version from npm (cached after first run)
+    (pkgs.writeShellScriptBin "histy" ''
+      exec ${pkgs.nodejs}/bin/npx -y histy-cli "$@"
+    '')
+
+    # fh — fzf history search: unique commands, newest first, copy to clipboard
+    (pkgs.writeShellScriptBin "fh" ''
+      cmd=$(sed 's/^[^;]*;//' "$HOME/.zsh_history" | tac | perl -ne 'print if !$c{$_}++' | ${pkgs.fzf}/bin/fzf --no-sort --prompt='History> ' --preview='echo {}' --preview-window=up:3:wrap)
+      if [[ -n "$cmd" ]]; then
+        printf '%s' "$cmd" | ${pkgs.xclip}/bin/xclip -selection clipboard
+        echo "Copied: $cmd"
+      fi
+    '')
+
+    # fp — fzf process search: show PID+name+exe, preview details, kill on enter
+    (pkgs.writeShellScriptBin "fp" ''
+      selection=$(ps aux | ${pkgs.fzf}/bin/fzf --header-lines=1 --prompt='Process> ' --preview='echo "PID: {2}"; echo "EXE: $(readlink -f /proc/{2}/exe 2>/dev/null || echo N/A)"; ps -p {2} -o pid,user,%cpu,%mem,rss,args --no-headers 2>/dev/null' --preview-window=up:8:wrap)
+      if [[ -n "$selection" ]]; then
+        pid=$(echo "$selection" | awk '{print $2}')
+        if [[ "$pid" -ne $$ && "$pid" -ne $(ps -o ppid= -p $$) ]]; then
+          kill "$pid" 2>/dev/null && echo "Killed PID $pid" || echo "Failed to kill PID $pid"
+        fi
+      fi
+    '')
+
+    # ff — fzf file/directory search from /, copy absolute path to clipboard
+    (pkgs.writeShellScriptBin "ff" ''
+      selection=$(${pkgs.fd}/bin/fd --type f --type d --hidden -E /proc -E /sys -E /dev -E /run . / 2>/dev/null | ${pkgs.fzf}/bin/fzf --prompt='Files> ' --preview='if [ -d {} ]; then ls -la {} 2>/dev/null; else ${pkgs.bat}/bin/bat --style=numbers --color=always {} 2>/dev/null || cat {}; fi' --preview-window=right:60%)
+      if [[ -n "$selection" ]]; then
+        printf '%s' "$selection" | ${pkgs.xclip}/bin/xclip -selection clipboard
+        echo "Copied: $selection"
+      fi
+    '')
   ];
+
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
 
   # Zsh shell configuration
   programs.zsh = {
@@ -69,29 +109,28 @@
     # Custom shell aliases
     shellAliases = {
       up    = "cd ~/.config/nixos && git add . && nixos-rebuild switch --elevate=sudo --flake .#nixos";
-      c     = "clear";
+      c     = "clear -x";
       cat   = "bat";                       # Use bat instead of cat
       b     = "bat";                       # Shorthand for bat
       l     = "ls -lh --color=auto";       # Long listing with human-readable sizes
       la    = "ls -lha --color=auto";      # Long listing including hidden files
       ".."  = "cd ..";
       "..." = "cd ../..";
-      f     = "fastfetch";                 # System info display
+      f     = "fzf";                 # Fzf fuzzy finder
       mem   = "free -h";                   # Memory usage
       disk  = "df -h";                     # Disk usage
       top   = "btop";                      # System monitor
       m     = "mpv";                       # Media player
       p     = "python";
       dn    = "sudo nix-collect-garbage --delete-older-than 30d";
-      fp    = "~/Apps/fp/target/release/fp";
+
       nn    = "~/Apps/ollama-notes/target/release/genote";
       tgw   = "steam-run ~/Apps/tgw/tgwsproxy";
-      pp    = "~/Apps/proxy-scraper-checker/target/release/proxy-scraper-checker";
+      pp    = "cd ~/Apps/proxy-scraper-checker && ./target/release/proxy-scraper-checker";
       v     = "vim";
-      n     = "nvim";
-      yb = "yazi ~/Documents/xmb03";
+      yn = "yazi ~/Documents/xmb03";
       z  = "zellij";
-      dp = "DEFAULT_THINKING=1 nix run --no-write-lock-file /home/xmb03/Apps/Deepseek-API#deepseek-api";
+      h  = "histy";                      # histy — TUI shell history browser
     };
   };
 }

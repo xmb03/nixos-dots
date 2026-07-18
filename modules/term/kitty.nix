@@ -22,8 +22,15 @@
       # Don't prompt for confirmation when closing multiple windows
       confirm_os_window_close = 0;
 
+      # Font size (2x Ctrl+Shift++ from default 11.0 = 15.0)
+      font_size = 15.0;
+
       # Launch zellij automatically on kitty start
       shell = "zellij --layout welcome";
+
+      # White non-blinking cursor
+      cursor = "#ffffff";
+      cursor_blink_interval = 0;
     };
   };
 }

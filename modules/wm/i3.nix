@@ -13,6 +13,7 @@
     '';
 
     config = {
+      terminal = "kitty";
       # Super/Windows key as the main modifier
       modifier = "Mod4";
 
@@ -99,7 +100,7 @@ in "exec sh -c '${maim} ~/Pictures/$(date +%Y%m%d_%H%M%S).png && ${maim} | ${xcl
   notify = "${pkgs.libnotify}/bin/notify-send";
 in "exec sh -c 'FILE=~/Pictures/$(date +%Y%m%d_%H%M%S).png && ${maim} -s \"$FILE\" && ${xclip} -selection clipboard -t image/png -i \"$FILE\" && ${notify} \"Screenshot\" \"Area captured\" --icon=camera-photo'";
         # Application launchers
-        "Mod4+w"         = "exec firefox";
+        "Mod4+w"         = "exec helium";
         "Mod4+d"         = "exec rofi -show drun";
         "Mod4+v"         = "exec env CM_LAUNCHER=rofi clipmenu -p Clip";
         "Mod4+Tab"       = "exec rofi -show";

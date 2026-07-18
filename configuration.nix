@@ -15,8 +15,12 @@
     ./modules/services/networkmanager.nix  # NetworkManager + networking tweaks
     ./modules/hardware/power.nix         # Power management (auto-cpufreq, thermald, NVIDIA PM, powertop)
     ./modules/hardware/win.nix           # Windows NTFS partitions mount
+    ./modules/hardware/mouse.nix         # Static cursor theme (system-wide)
     ./modules/services/ollama.nix        # Ollama LLM server with CUDA
     ./modules/services/qbittorrent.nix
+    ./modules/browser/helium.nix       # Helium browser (minimal Firefox fork)
+    ./modules/games/default.nix        # Steam, GameMode, Flatpak
+    ./modules/pass/Vaultwarden.nix     # Vaultwarden password manager server
   ];
 
   # Boot configuration
@@ -93,6 +97,7 @@
 
   # xserver enable
   services.xserver.enable = true;
+  services.xserver.desktopManager.xterm.enable = false;
   # Display Manager (login screen) lightDM 
   services.xserver.displayManager.lightdm.enable = true;
   services.displayManager.autoLogin = {

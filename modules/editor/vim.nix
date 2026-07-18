@@ -51,21 +51,19 @@
       vnoremap <C-/> <Esc>:FloatermToggle --cwd=<buffer><CR>
       tnoremap <C-/> <C-\><C-n>:FloatermToggle<CR>
 
-      " vim-lsp: rust-analyzer
+      " vim-lsp: rust-analyzer (standalone .rs files supported via RUST_SRC_PATH)
       au User lsp_setup call lsp#register_server({
           \ 'name': 'rust-analyzer',
           \ 'cmd': {server_info->['${pkgs.rust-analyzer}/bin/rust-analyzer']},
           \ 'allowlist': ['rust'],
+          \ 'workspace_config': {
+          \   'rust-analyzer': {
+          \     'checkOnSave': v:false,
+          \     'cargo': { 'loadOutDirsFromCheck': v:true },
+          \   },
+          \ },
           \ })
       au FileType rust setlocal omnifunc=lsp#complete
     '';
   };
-
-  home.packages = with pkgs; [
-    cargo
-    rustc
-    rustfmt
-    clippy
-    rust-analyzer
-  ];
 }

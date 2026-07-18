@@ -25,6 +25,7 @@
     ./modules/scripts/rofi-theme.nix     # Rofi Stylix palette picker
     ./modules/firefox/default.nix    # Firefox config, extensions, textfox theme
     ./modules/editor/vim.nix         # Vim config, plugins, settings
+    ./modules/language/rust.nix      # Rust toolchain, cargo config, rust-analyzer
     ./modules/chromium/default.nix
   ];
 
@@ -44,7 +45,7 @@
     i3.enable = true;       # i3 bar and border colors
     rofi.enable = true;   # Stylix-managed rofi theme
     yazi.enable = true;     # Yazi file manager colors
-    neovim.enable = true;   # Neovim colors from Stylix
+    # neovim.enable = true;   # Neovim colors from Stylix
     gtk.enable = true;      # GTK application theming
     dunst.enable = true;    # Notification daemon colors
     firefox = {
@@ -93,8 +94,7 @@
     mpv
     rofimoji            # Emoji picker with Russian support
     obs-studio
-    # rust
-    rustlings
+
   ];
 
   # Enable home-manager (must be set for the user)

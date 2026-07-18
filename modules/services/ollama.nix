@@ -24,8 +24,9 @@ let
   '';
 
   modelfile = pkgs.writeText "gemma-4-e4b-strict.Modelfile" ''
-FROM gemma-4-e4b:q3_k_m
+FROM /home/xmb03/ai-models/CQ_Gemma4_E4B_f16_Q4_K.gguf
 PARAMETER temperature 0
+PARAMETER num_ctx 131072
 SYSTEM """${strictSystemPrompt}"""
 '';
 in
