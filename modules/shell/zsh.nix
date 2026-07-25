@@ -15,6 +15,8 @@
     # Zsh completion system (automatically configured by home-manager)
     pkgs.zsh-completions
     pkgs.fd
+    pkgs.file
+    pkgs.tree
 
     # Custom "y" command: copies file content to clipboard
     # Usage: y <filename>
@@ -66,6 +68,10 @@
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
+  };
+
+  programs.fastfetch = {
+    enable = true;
   };
 
   # Zsh shell configuration

@@ -4,6 +4,15 @@
 
 { config, pkgs, lib, ... }:
 {
+  home.packages = with pkgs; [
+    xdotool
+    xclip
+    dunst
+    xss-lock
+    i3lock
+    dex
+  ];
+
   xsession.windowManager.i3 = {
     enable = true;
     package = pkgs.i3;
@@ -78,6 +87,10 @@
         { command = "xset r rate 200 50"; always = true; notification = false; }
         # Desktop Entry autostart (XDG autostart)
         { command = "dex --autostart --environment i3"; notification = false; }
+        # Apply Xresources (cursor theme, DPI)
+        { command = "${pkgs.xorg.xrdb}/bin/xrdb -merge ~/.Xresources"; always = true; notification = false; }
+        # Clipboard manager daemon (saves all copies to history)
+        { command = "${pkgs.clipmenu}/bin/clipmenud"; always = true; notification = false; }
         # Restore last wallpaper on login
         { command = "rofi-wallpaper --restore"; always = true; notification = false; }
         # xss-lock — слушает сигнал блокировки от logind, запускает i3lock
@@ -103,8 +116,9 @@ in "exec sh -c 'FILE=~/Pictures/$(date +%Y%m%d_%H%M%S).png && ${maim} -s \"$FILE
         "Mod4+w"         = "exec helium";
         "Mod4+d"         = "exec rofi -show drun";
         "Mod4+v"         = "exec env CM_LAUNCHER=rofi clipmenu -p Clip";
-        "Mod4+Tab"       = "exec rofi -show";
-        "Mod4+p"         = "exec powermenu";
+"Mod4+Tab"       = "exec rofi -show";
+         "Mod4+n"         = "exec ~/Apps/monitor/rofi-display.sh";
+         "Mod4+p"         = "exec powermenu";
         "Mod4+a"         = "exec rofi-wallpaper";
         "Mod4+Shift+a"   = "exec rofi-theme";
         "Mod4+m"         = "exec rofimoji";

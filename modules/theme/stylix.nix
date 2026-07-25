@@ -6,7 +6,7 @@
     enable = true;
 
     # Use grayscale-dark base16 scheme (black & white theme)
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/grayscale-dark.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-latte.yaml";
 
     # Color polarity preference (dark or light)
     polarity = "dark";

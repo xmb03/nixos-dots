@@ -93,6 +93,7 @@
   # Yandex DNS (77.88.8.8) - fast and reliable, hosted in Russia
   # Google DNS (8.8.8.8) - globally available fallback
   networking.nameservers = [ "77.88.8.8" "8.8.8.8" ];
+  networking.firewall.allowedTCPPorts = [ 11434 ];
 
   # IPv6 support
   # -------------
@@ -114,4 +115,7 @@
   # - Systems with slow or intermittent network links
   # - Offline use cases
   systemd.services.NetworkManager-wait-online.enable = false;
+
+  # NetworkManager applet for system tray (system-level)
+  environment.systemPackages = [ pkgs.networkmanagerapplet ];
 }

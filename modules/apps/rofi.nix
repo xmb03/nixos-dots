@@ -3,6 +3,8 @@
 let
   c = config.lib.stylix.colors.withHashtag;
 in {
+  home.packages = [ pkgs.rofi-calc pkgs.rofimoji ];
+
   programs.rofi = {
     enable = true;
     package = pkgs.rofi;

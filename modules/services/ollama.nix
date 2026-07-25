@@ -29,14 +29,27 @@ PARAMETER temperature 0
 PARAMETER num_ctx 131072
 SYSTEM """${strictSystemPrompt}"""
 '';
+
+  omnicoderModelfile = pkgs.writeText "omnicoder.Modelfile" ''
+FROM /home/xmb03/ai-models/Tesslate_OmniCoder-9B-Q4_K_M.gguf
+PARAMETER temperature 0
+PARAMETER num_ctx 131072
+SYSTEM """${strictSystemPrompt}"""
+'';
 in
 {
   services.ollama = {
     enable = true;
-    package = pkgs.ollama;
-    host = "127.0.0.1";
+    package = pkgs.ollama-cuda;
+    host = "0.0.0.0";
     port = 11434;
     openFirewall = false;
+  };
+
+  systemd.services.ollama.environment = {
+    __NV_PRIME_RENDER_OFFLOAD = "1";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    OLLAMA_NUM_GPU_LAYERS = "99";
   };
 
   systemd.services.configure-ollama-models = {
@@ -54,6 +67,10 @@ in
 
       if ! OLLAMA_HOST=127.0.0.1:11434 HOME=/var/lib/ollama ollama list 2>/dev/null | grep -q "gemma-4-e4b-strict"; then
         OLLAMA_HOST=127.0.0.1:11434 HOME=/var/lib/ollama ollama create gemma-4-e4b-strict -f ${modelfile} || true
+      fi
+
+      if ! OLLAMA_HOST=127.0.0.1:11434 HOME=/var/lib/ollama ollama list 2>/dev/null | grep -q "omnicoder"; then
+        OLLAMA_HOST=127.0.0.1:11434 HOME=/var/lib/ollama ollama create omnicoder -f ${omnicoderModelfile} || true
       fi
 
       mkdir -p ${home}/.ollama

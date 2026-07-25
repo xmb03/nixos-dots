@@ -26,10 +26,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # MCP server packages and modules for Nix
+    mcp-servers-nix = {
+      url = "github:natsukium/mcp-servers-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   # Outputs define what this flake produces (system configurations)
-  outputs = { nixpkgs, home-manager, stylix, nur, ... }@inputs: {
+  outputs = { nixpkgs, home-manager, stylix, nur, mcp-servers-nix, ... }@inputs: {
     # Define a NixOS system configuration named "nixos"
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       # System architecture (64-bit Intel/AMD)

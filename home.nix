@@ -26,7 +26,20 @@
     ./modules/firefox/default.nix    # Firefox config, extensions, textfox theme
     ./modules/editor/vim.nix         # Vim config, plugins, settings
     ./modules/language/rust.nix      # Rust toolchain, cargo config, rust-analyzer
+    ./modules/language/python.nix    # Python toolchain, uv, ruff
     ./modules/chromium/default.nix
+    ./modules/apps/opencode.nix
+    ./modules/services/mcp.nix
+    # Application packages
+    ./modules/apps/git.nix
+    ./modules/apps/bat.nix
+    ./modules/apps/btop.nix
+    ./modules/apps/maim.nix
+    ./modules/apps/media-control.nix
+    ./modules/apps/localsend.nix
+    ./modules/apps/telegram.nix
+    ./modules/apps/mpv.nix
+    ./modules/apps/obs.nix
   ];
 
   # Home Manager user metadata
@@ -54,48 +67,6 @@
       colorTheme.enable = true;  # Firefox UI colors match wallpaper
     };
   };
-
-  # User-level packages (installed via home-manager)
-  home.packages = with pkgs; [
-    # System utilities
-    xdotool          # X11 automation (keyboard/mouse simulation)
-    xclip            # Clipboard management from CLI
-    zsh              # Z shell (primary shell)
-    file             # File type detection
-    tree             # Directory tree viewer
-    bat              # Cat replacement with syntax highlighting
-    btop             # System resource monitor (top replacement)
-    fastfetch        # System info display (neofetch replacement)
-    git              # Version control
-
-    # Desktop components
-    i3status-rust    # Status bar for i3 (keyboard, volume, network, time)
-    rofi             # Application launcher (drun, clipboard, wallpaper)
-    rofi-calc        # Rofi calculator plugin
-    feh              # Image viewer / wallpaper setter
-    dunst            # Notification daemon
-    xss-lock         # Screen lock on suspend
-    i3lock           # Screen locker utility
-    maim             # Screenshot tool (fullscreen, region, window)
-    slop             # Required by maim -s for region selection
-    pulsemixer       # PulseAudio volume mixer (CLI)
-    playerctl        # Media player control from CLI
-    udiskie          # Automatic USB drive mounting
-    dex              # Desktop file execution (autostart)
-    libnotify        # Desktop notification library
-
-    # Network
-    networkmanagerapplet  # NetworkManager system tray icon
-
-    # Communication / Productivity
-    opencode         # AI coding assistant CLI
-    localsend        # Local file sharing (LAN, no internet needed)
-    telegram-desktop # Telegram messaging app
-    mpv
-    rofimoji            # Emoji picker with Russian support
-    obs-studio
-
-  ];
 
   # Enable home-manager (must be set for the user)
   programs.home-manager.enable = true;

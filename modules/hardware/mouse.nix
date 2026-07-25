@@ -1,16 +1,14 @@
 { config, pkgs, lib, ... }:
 
-let
-  staticCursor = pkgs.callPackage ../../cursors/static {};
-in {
-  environment.systemPackages = [ staticCursor ];
+{
+  environment.systemPackages = [ pkgs.static-cursor ];
 
-  services.xserver.displayManager.lightdm.greeters.gtk.cursorTheme = {
-    name = "static";
-    package = staticCursor;
+  environment.variables = {
+    XCURSOR_THEME = "static";
   };
 
-  services.xserver.displayManager.sessionCommands = ''
-    ${pkgs.xorg.xrdb}/bin/xrdb -merge <<< "Xcursor.theme: static"
-  '';
+  services.libinput.mouse = {
+    accelProfile = "flat";
+    accelSpeed = "-0.39";
+  };
 }

@@ -61,6 +61,5 @@ let
   '';
 in
 {
-  # Install the wallpaper script into the user's PATH
-  home.packages = [ wallpaperScript ];
+  home.packages = [ wallpaperScript pkgs.feh pkgs.libnotify ];
 }

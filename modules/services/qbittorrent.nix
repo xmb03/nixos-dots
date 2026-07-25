@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   services.qbittorrent = {
@@ -28,13 +28,19 @@
         MaxConnections = 200;
         MaxConnectionsPerTorrent = 40;
         GlobalMaxUploads = 30;
-        SendToSocketBufferSizeMethod = 0;
-        ReceiveFromSocketBufferSizeMethod = 0;
+        SendToSocketBufferMethod = 0;
+        ReceiveFromSocketBufferMethod = 0;
         DHT = true;
         LSD = false;
         Encryption = 1;
         AnonymousMode = true;
       };
     };
+  };
+
+  systemd.services.qbittorrent.serviceConfig = {
+    ProtectSystem = lib.mkForce false;
+    ProtectHome = lib.mkForce false;
+    PrivateUsers = lib.mkForce false;
   };
 }

@@ -21,6 +21,7 @@
     ./modules/browser/helium.nix       # Helium browser (minimal Firefox fork)
     ./modules/games/default.nix        # Steam, GameMode, Flatpak
     ./modules/pass/Vaultwarden.nix     # Vaultwarden password manager server
+    ./modules/services/docker.nix      # Docker container runtime
   ];
 
   # Boot configuration
@@ -33,6 +34,10 @@
 
   # Use the latest available Linux kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # NVIDIA стабильность — предзагрузка модулей и fbdev
+  boot.initrd.kernelModules = [ "nvidia" "nvidia_uvm" "nvidia_drm" ];
+  boot.kernelParams = [ "nvidia-drm.fbdev=1" ];
 
   # Networking
   # ----------
@@ -54,8 +59,11 @@
     sandbox = true;
 
     substituters = [
-      "https://cache.nixos.org"
+      "https://mirror.nju.edu.cn/nix-channels/store"
+      "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
+      "https://mirror.sjtu.edu.cn/nix-channels/store"
       "https://mirrors.ustc.edu.cn/nix-channels/store"
+      "https://cache.nixos.org"
     ];
 
     auto-optimise-store = true;
@@ -98,15 +106,24 @@
   # xserver enable
   services.xserver.enable = true;
   services.xserver.desktopManager.xterm.enable = false;
-  # Display Manager (login screen) lightDM 
-  services.xserver.displayManager.lightdm.enable = true;
-  services.displayManager.autoLogin = {
+  # Greetd login manager (tuigreet TUI)
+  services.greetd = {
     enable = true;
-    user = "xmb03";
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd sx i3";
+        user = "greeter";
+      };
+    };
   };
+
+  security.pam.services.greetd.enableGnomeKeyring = true;
 
   # Enable i3 as additional window manager option
   services.xserver.windowManager.i3.enable = true;
+
+  # Enable sx
+  services.xserver.displayManager.sx.enable = true;
 
   # Printing
   # --------
@@ -159,6 +176,13 @@
     gcc     # GNU C compiler
     p7zip   # 7-Zip archive tool
     steam-run # Steam runtime for running games
+  ];
+
+  # Overlay для кастомного статического курсора
+  nixpkgs.overlays = [
+    (final: prev: {
+      static-cursor = final.callPackage ./cursors/static {};
+    })
   ];
 
   # State version

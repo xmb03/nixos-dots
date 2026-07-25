@@ -200,6 +200,26 @@
         "type": "github"
       }
     },
+    "mcp-servers-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784589916,
+        "narHash": "sha256-RLVPc1M3ek1XENJjDv66TbHOPk8l5w/3dsJhYmK/TmU=",
+        "owner": "natsukium",
+        "repo": "mcp-servers-nix",
+        "rev": "76ef2115bcccfa8d3562ab7455c4b1f2f34d9001",
+        "type": "github"
+      },
+      "original": {
+        "owner": "natsukium",
+        "repo": "mcp-servers-nix",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1782723713,
@@ -296,6 +316,7 @@
       "inputs": {
         "helium-flake": "helium-flake",
         "home-manager": "home-manager",
+        "mcp-servers-nix": "mcp-servers-nix",
         "nixpkgs": "nixpkgs",
         "nur": "nur",
         "stylix": "stylix"

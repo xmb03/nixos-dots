@@ -13,3 +13,4 @@ seqread.0.0
 randread.0.0
 *.0.0
 hardware-configuration.nix
+.playwright-mcp/

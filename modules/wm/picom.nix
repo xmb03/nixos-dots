@@ -26,8 +26,6 @@
       mark-ovredir-focused = true;
       detect-rounded-corners = false;
       detect-client-opacity = false;
-      glx-no-stencil = true;
-      glx-no-rebind-pixmap = true;
       xrender-sync-fence = true;
       respect-prop-shadow = false;
       no-dnd-shadow = true;

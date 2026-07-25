@@ -17,7 +17,7 @@
 
   home.file.".cargo/config.toml".text = ''
     [build]
-    jobs = 0
+    jobs = 12
     rustflags = ["-C", "target-cpu=native"]
 
     [profile.release]
@@ -31,7 +31,7 @@
   '';
 
   home.sessionVariables = {
-    CARGO_BUILD_JOBS = "0";
+    CARGO_BUILD_JOBS = "12";
     CARGO_NET_RETRY = "3";
     CARGO_HTTP_TIMEOUT = "30";
     RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
